@@ -1,24 +1,6 @@
 #include <VirtualWire.h>
 void setup()
 {
- switch (Serial.read()){
-  case 1:
-
-
-
-digitalWrite(13,1);
-
-  break;
-  case 2:
-  
-digitalWrite(13,0);
-
-  
-  break;
-  
- }
-
-
 vw_set_ptt_inverted(true); // Required for DR3100
 vw_set_rx_pin(12);
 vw_setup(4000); // Bits per sec

@@ -5,6 +5,7 @@ pinMode(13,OUTPUT);
 vw_set_ptt_inverted(true); //
 vw_set_tx_pin(12);
 vw_setup(4000);// speed of data transfer Kbps
+Serial.begin(9600);
 }
 
 void loop(){
@@ -17,17 +18,17 @@ void loop(){
     break;
    }
    }
-  void ledon(){
+  void ledon(){//
 controller="1" ;
 vw_send((uint8_t *)controller, strlen(controller));
 vw_wait_tx(); // Wait until the whole message is gone
-digitalWrite(13,1);
+digitalWrite(13,HIGH);
   }
   void ledoff(){
 controller="0" ;
 vw_send((uint8_t *)controller, strlen(controller));
 vw_wait_tx(); // Wait until the whole message is gone
-digitalWrite(13,0);
+digitalWrite(13,LOW);
   }
 
 
