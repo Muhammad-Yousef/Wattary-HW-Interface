@@ -4,16 +4,16 @@ import time
 data =1
 
 while True:
-    Print(data)
-    try:
-        client = mqtt.client()
-        client.username_pw_set("incmrvjk","EUVFYnYcv0Qv")
-        client.connect("m14.cloudmqtt.com", 11652, 60)
 
-        client.publish("pi", data)
-        time.sleep(1)
+        print(data)
+        try:
+            client = mqtt.Client()
+            client.username_pw_set("incmrvjk", "EUVFYnYcv0Qv")
+            client.connect("m14.cloudmqtt.com", 11652, 60)
 
-     except keyboardInterrupt:
-         Print("end")
-         client.disconnect()
-                    
+            client.publish("pi", data)  
+            time.sleep(1)
+            
+        except KeyboardInterrupt:
+            print("end")
+            client.disconnect()
