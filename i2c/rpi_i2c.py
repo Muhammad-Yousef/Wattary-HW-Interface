@@ -7,6 +7,7 @@
 #Import the Library Requreid 
 import smbus
 import time
+import struct
 
 # for RPI version 1, use "bus = smbus.SMBus(0)"
 bus = smbus.SMBus(1)
@@ -29,14 +30,19 @@ def writeNumber(value):
     # bus.write_byte_data(address, 0, value)
     return -1
 
+def get_float(data, index):
+    bytes = data[4*index:(index+1)*4]
+    return struct.unpack('f', "".join(map(chr, bytes)))[0]
+
 def readNumber():
     number = bus.read_byte(address)
     number1 = bus.read_byte_data(address_2, 1)
-    number2 = bus.read_byte_data(address_3, 1)
+    number2 = bus.read_i2c_block_data(address_3, 1)
  
     print(number)
     print(number1)
-    print(number2)
+    #print(number2)
+    print(get_float(number2, 0))
     
     
 while True:
