@@ -8,13 +8,14 @@ SCL -> A5
 #include <Wire.h>
 
 //Slave Address for the Communication
-#define SLAVE_ADDRESS 0x05
+#define SLAVE_ADDRESS 0x04
 
 char number[50];
 int state = 0;
 
 //Code Initialization
 void setup() {
+
   // initialize i2c as slave
   Serial.begin(9600);
   Wire.begin(SLAVE_ADDRESS);
@@ -36,11 +37,20 @@ void receiveData(int byteCount){
   }
   number[i] = '\0';
   Serial.print(number);
+switch (number[0]){
+      case 'c':
+          Serial.println("tv on");
+          break;
+                case 'd':
+                      Serial.println("tv off");
+break;
+  }
+
 }  // end while
 
 // callback for sending data
 void sendData(){
-  Wire.write(number);
+  Wire.write("");
 }
 
 //End of the program
