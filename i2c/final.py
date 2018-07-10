@@ -17,13 +17,19 @@ from sendData import *
 
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(11,GPIO.OUT)
+GPIO.setup(11,GPIO.OUT) #Bedroom Light
 GPIO.setup(12,GPIO.OUT)
 GPIO.setup(13,GPIO.OUT)
-GPIO.setup(15,GPIO.OUT)
-GPIO.setup(16,GPIO.OUT)
+GPIO.setup(15,GPIO.OUT) #Coffee Machine
+GPIO.setup(16,GPIO.OUT) #Water Tap
 GPIO.setup(18,GPIO.OUT)
 GPIO.setup(19,GPIO.OUT)
+
+GPIO.setup(21,GPIO.OUT) #Fridge on Model
+GPIO.setup(22,GPIO.OUT) #Real Light
+#GPIO.setup(23,GPIO.OUT) #For TV on Model
+#GPIO.setup(24,GPIO.OUT) #For AC on Model
+#GPIO.setup(26,GPIO.OUT) #For AC on Model
 #time.sleep(30)
 
 # for RPI version 1, use "bus = smbus.SMBus(0)"
@@ -153,13 +159,17 @@ def on_message(client, userdata, msg):
     print(" TV(on) ")
     
   elif msg.payload.decode() == "11":
-    print("light bedroom switched on ")
+    print(" Bedroom Light switched ON ")
     GPIO.output(11,1)
+    print(" Real Light switched ON ")
+    GPIO.output(22, 1)
 
   
   elif msg.payload.decode() == "12":
-    print("light bedroom switched off")
+    print(" Bedroom Light switched OFF ")
     GPIO.output(11,0)
+    print(" Real Light switched OFF ")
+    GPIO.output(22, 0)
     
     
   elif msg.payload.decode() == "13":
@@ -182,24 +192,18 @@ def on_message(client, userdata, msg):
     GPIO.output(13,0)
     
     
-  elif msg.payload.decode() == "117":
-    print("TV switched On")
-    GPIO.output(16,1)
-
-    
-  elif msg.payload.decode() == "118":
-    print("Tv switched Off")
-    GPIO.output(16,0)
+  elif msg.payload.decode() == "21":
+    print(" Coffee Machine switched ON ")
+    GPIO.output(15,1)
+    print(" Fridge on Model switched ON ")
+    GPIO.output(21, 1)
     
     
-  elif msg.payload.decode() == "17":
-    print("Coffee Machine switched On")
-    GPIO.output(15,1) 
-    
-    
-  elif msg.payload.decode() == "18":
-    print("Coffee Machine switched Off")
+  elif msg.payload.decode() == "22":
+    print(" Coffee Machine switched OFF ")
     GPIO.output(15,0)
+    print(" Fridge on Model switched OFF ")
+    GPIO.output(21, 0)
 
   elif msg.payload.decode() == "23":
     print("Kitchen switched On")
@@ -422,15 +426,17 @@ def on_message(client, userdata, msg):
     print(" call elevator ")
 
   elif msg.payload.decode() == "100":
-    value = 69
-    bus.write_byte(address, value)
-    print(" water tap.(on) ")
+    #value = 69
+    #bus.write_byte(address, value)
+    print(" Water Tap switched ON ")
+    GPIO.output(16, 1)
 
 
   elif msg.payload.decode() == "101":
-    value = 70
-    bus.write_byte(address, value)
-    print(" water tap.(off) ")
+    #value = 70
+    #bus.write_byte(address, value)
+    print(" Water Tap switched OFF ")
+    GPIO.output(16, 0)
 
 
   elif msg.payload.decode() == "102":
