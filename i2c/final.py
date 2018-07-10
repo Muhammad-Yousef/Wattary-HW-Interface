@@ -10,7 +10,20 @@ import time
 import struct
 import os
 import paho.mqtt.client as mqtt
+import RPi.GPIO as GPIO
+import upload
+from sendData import *
 
+
+GPIO.setmode(GPIO.BOARD)
+
+GPIO.setup(11,GPIO.OUT)
+GPIO.setup(12,GPIO.OUT)
+GPIO.setup(13,GPIO.OUT)
+GPIO.setup(15,GPIO.OUT)
+GPIO.setup(16,GPIO.OUT)
+GPIO.setup(18,GPIO.OUT)
+GPIO.setup(19,GPIO.OUT)
 #time.sleep(30)
 
 # for RPI version 1, use "bus = smbus.SMBus(0)"
@@ -18,13 +31,13 @@ bus = smbus.SMBus(1)
 
 # This is the address we setup in the Arduino Program
 #Slave Address 1
-address = 0x04
+#address = 0x04
 
 #Slave Address 2
-address_2 = 0x05
+address = 0x05
 
 #slave address 3
-address_3 = 0x06
+#address = 0x06
 
 def on_connect(client, userdata, flags, rc):
   print("Connected with result code "+str(rc))
@@ -138,6 +151,86 @@ def on_message(client, userdata, msg):
     value = 97 
     bus.write_byte(address, value)
     print(" TV(on) ")
+    
+  elif msg.payload.decode() == "11":
+    print("light bedroom switched on ")
+    GPIO.output(11,1)
+
+  
+  elif msg.payload.decode() == "12":
+    print("light bedroom switched off")
+    GPIO.output(11,0)
+    
+    
+  elif msg.payload.decode() == "13":
+    print("light bathroom switched on ")
+    GPIO.output(12,1)
+    
+    
+  elif msg.payload.decode() == "14":
+    print("light bathroom switched off ")
+    GPIO.output(12,0)
+    
+
+  elif msg.payload.decode() == "15":
+    print("light Hallway switched on")
+    GPIO.output(13,1)
+     
+    
+  elif msg.payload.decode() == "16":
+    print("light Hallway switched off")
+    GPIO.output(13,0)
+    
+    
+  elif msg.payload.decode() == "117":
+    print("TV switched On")
+    GPIO.output(16,1)
+
+    
+  elif msg.payload.decode() == "118":
+    print("Tv switched Off")
+    GPIO.output(16,0)
+    
+    
+  elif msg.payload.decode() == "17":
+    print("Coffee Machine switched On")
+    GPIO.output(15,1) 
+    
+    
+  elif msg.payload.decode() == "18":
+    print("Coffee Machine switched Off")
+    GPIO.output(15,0)
+
+  elif msg.payload.decode() == "23":
+    print("Kitchen switched On")
+    GPIO.output(18,1) 
+    
+    
+  elif msg.payload.decode() == "24":
+    print("Kitchen switched off")
+    GPIO.output(18,0)
+
+ 
+  elif msg.payload.decode() == "25":
+    GPIO.output(19,1) 
+    print("living room switched on")
+    
+    
+  elif msg.payload.decode() == "26":
+    GPIO.output(19,0)
+    print("living room switched Off")
+    
+    
+  elif msg.payload.decode() == "110":
+    os.system("fswebcam test199.jpeg")
+    print "photo taken"
+    flag, url = upload.upload_image("/home/pi/Desktop/Wattary/test199.jpeg")
+    if flag == 101:
+      print url
+      send_url(url)
+    elif flag == 102:
+      error = url
+      print error
     
   elif msg.payload.decode() == "40":
     value = 98
@@ -340,7 +433,21 @@ def on_message(client, userdata, msg):
     print(" water tap.(off) ")
 
 
-  
+  elif msg.payload.decode() == "102":
+    value = 71
+    bus.write_byte(address, value)
+    print(" measure curtains ")
+    number = bus.read_byte(address)
+    print(number)
+
+
+  elif msg.payload.decode() == "103":
+    value = 72
+    bus.write_byte(address, value)
+    print(" measure water tap ")
+    number = bus.read_byte(address)
+    print(number)
+ 
 
 
 
@@ -372,9 +479,15 @@ client.connect("m14.cloudmqtt.com", 11652, 60)
 client.on_connect = on_connect
 client.on_message = on_message
 
+try:
+  client.loop_forever()
 
+except KeyboardInterrupt:
+  GPIO.cleanup()
 
-client.loop_forever()
+finally:
+  GPIO.cleanup()
+
 
 
 
